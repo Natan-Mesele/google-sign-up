@@ -1,4 +1,4 @@
-const { createOrFindUser } = require('../service/authService');
+const { createOrFindUser, registerUser } = require('../service/authService');
 
 const googleSignUp = async (req, res) => {
   const { name, email, photoUrl, uid } = req.body;
@@ -14,4 +14,26 @@ const googleSignUp = async (req, res) => {
   }
 };
 
-module.exports = { googleSignUp };
+const register = async (req, res) => {
+  const { name, email, password, uid, photoUrl } = req.body;
+
+  try {
+    const user = await registerUser(name, email, password, uid, photoUrl);
+    res.status(201).json({
+      message: "User registered successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+
+module.exports = { 
+  googleSignUp,
+  register
+ };

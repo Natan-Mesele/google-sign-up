@@ -16,4 +16,29 @@ const createOrFindUser = async (userData) => {
   return user;
 };
 
-module.exports = { createOrFindUser };
+const registerUser = async (name, email, password, uid, photoUrl) => {
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    throw new Error("User already exists");
+  }
+
+  let userData = {
+    name,
+    email,
+    uid,
+    photoUrl,
+  };
+
+  if (password) {
+    userData.password = password;
+  }
+
+  const user = await User.create(userData);
+  return user;
+};
+
+module.exports = {
+  createOrFindUser,
+  registerUser
+};
