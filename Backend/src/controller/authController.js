@@ -1,4 +1,6 @@
+const jwt = require('jsonwebtoken')
 const { createOrFindUser, registerUser } = require('../service/authService');
+const { generateToken } = require('../config/jwtProvider');
 
 const googleSignUp = async (req, res) => {
   const { name, email, photoUrl, uid } = req.body;
@@ -19,8 +21,9 @@ const register = async (req, res) => {
 
   try {
     const user = await registerUser(name, email, password, uid, photoUrl);
+    const jwt = generateToken();
     res.status(201).json({
-      message: "User registered successfully",
+      jwt, message: "User registered successfully",
       user: {
         id: user._id,
         name: user.name,
